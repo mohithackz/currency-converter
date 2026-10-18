@@ -1,135 +1,96 @@
-# 💱 Currency Converter
+# Currency Converter
 
-A fast, lightweight, and responsive browser-based currency converter built with pure HTML5, CSS3, and vanilla JavaScript. Quickly convert between over 150 global currencies with live exchange rates and dynamic country flag previews.
+A lightweight, browser-based currency converter built with **HTML, CSS, and JavaScript**. Select a source and target currency, enter an amount, and fetch an exchange rate from a public currency API.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+## Features
 
----
+- Convert between a broad range of currency codes.
+- Choose source and target currencies from dropdown menus.
+- Display a country flag beside each currency selector.
+- Fetch exchange-rate data when the **Get Exchange Rate** button is clicked.
+- Show the converted amount rounded to two decimal places.
+- Use **USD → INR** as the default currency pair.
 
-## ✨ Features
+## Tech Stack
 
-- **🌐 Broad Currency Coverage:** Supports 150+ currencies across global countries and territories.
-- **🏳️ Dynamic Flag Indicators:** Automatically updates country flag icons beside each currency dropdown using FlagsAPI.
-- **⚡ Real-Time Rates:** Fetches fresh exchange rate data on demand from the open-source Currency API.
-- **🎯 Precise Calculations:** Converts amounts accurately and formats values rounded to two decimal places.
-- **🚀 Zero Build Tools / Zero Dependencies:** Runs out of the box in any modern browser without npm packages, Node.js, or complex bundlers.
-- **📱 Clean & Centered Interface:** Minimalist card layout with smooth inputs and intuitive selectors.
+- **HTML5** — page structure and form controls
+- **CSS3** — layout and styling
+- **Vanilla JavaScript** — dropdown population, flag updates, API requests, and conversion logic
+- **Currency API** — exchange-rate data from `@fawazahmed0/currency-api`
+- **Flags API** — flag images from `flagsapi.com`
+- **Font Awesome** — exchange icon
 
----
-
-## 🛠️ Tech Stack & Services
-
-| Technology / Service | Purpose |
-| :--- | :--- |
-| **HTML5** | Semantic structure, form controls, and dropdown elements |
-| **CSS3** | Modern flexbox layout, rounded containers, and custom form styling |
-| **Vanilla JavaScript (ES6+)** | Dynamic DOM population, asynchronous rate fetching, and conversion logic |
-| **[Currency API](https://github.com/fawazahmed0/currency-api)** | Real-time exchange rate endpoints delivered via jsDelivr CDN |
-| **[FlagsAPI](https://flagsapi.com/)** | High-definition country flag images (flat 64px) |
-| **[Font Awesome](https://fontawesome.com/)** | Vector currency exchange icon |
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```text
 currency-converter/
-├── index.html     # Main markup, input forms, and container layout
-├── style.css      # Styling, layout, color scheme, and responsive elements
-├── codes.js       # Mapping object linking 3-letter currency codes to 2-letter country codes
-├── app.js         # Dropdown population, flag sync, event listeners, and API fetch logic
-├── LICENSE        # MIT open-source license
-└── README.md      # Project documentation and setup guide
+├── index.html   # Main page and converter form
+├── style.css    # Layout, colors, and component styling
+├── codes.js     # Currency-code to country/region-code mapping
+└── app.js       # Dropdown setup, flag updates, and conversion logic
 ```
 
----
+## Getting Started
 
-## 🚀 Getting Started
+No package installation or build step is required.
 
-No build step or package installations are required!
+1. Download or clone this repository.
+2. Keep `index.html`, `style.css`, `codes.js`, and `app.js` in the same directory.
+3. Open `index.html` in a modern browser.
+4. Enter an amount, select the **From** and **To** currencies, and click **Get Exchange Rate**.
 
-### Option 1: Direct Browser Launch
-1. Clone or download this repository:
-   ```bash
-   git clone https://github.com/your-username/currency-converter.git
-   ```
-2. Open the project folder and double-click `index.html` to view it in any modern web browser (Chrome, Firefox, Safari, Edge).
+If your browser restricts requests when opening a local file, serve the folder with a simple local web server instead. For example, if Python is installed, run this command from the project directory:
 
-### Option 2: Local HTTP Server (Recommended)
-Some browsers restrict cross-origin requests when loading files directly via the `file://` protocol. Running a local HTTP server ensures smooth API requests:
+```bash
+python -m http.server 8000
+```
 
-- **Using Python 3:**
-  ```bash
-  python -m http.server 8000
-  ```
-  Then open [http://localhost:8000](http://localhost:8000) in your browser.
+Then open <http://localhost:8000> in your browser.
 
-- **Using Node.js (`npx serve`):**
-  ```bash
-  npx serve .
-  ```
+## How It Works
 
-- **Using VS Code Live Server:**
-  Right-click `index.html` in VS Code and select **"Open with Live Server"**.
+1. `codes.js` defines `countryList`, mapping currency codes to country or region codes used to display flags.
+2. `app.js` reads that mapping and dynamically fills both currency dropdowns.
+3. The default selections are USD for the source currency and INR for the target currency.
+4. When a currency selection changes, `updateFlag()` updates the associated flag image.
+5. When the form button is clicked, the app requests the selected source currency's data from the currency API.
+6. It reads the rate for the selected target currency, multiplies it by the entered amount, rounds the result to two decimal places, and displays the conversion.
 
----
+The exchange-rate endpoint is built from the selected source currency:
 
-## ⚙️ How It Works
+```text
+https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/<source-currency>.json
+```
 
-1. **Populating Currency Selectors (`codes.js` & `app.js`):**
-   - `codes.js` contains `countryList`, an object mapping currency codes (e.g., `USD`, `EUR`, `INR`) to 2-letter ISO country codes (e.g., `US`, `FR`, `IN`).
-   - `app.js` loops through this list to populate `<select>` dropdowns for both the source ("From") and target ("To") currencies, defaulting to **USD → INR**.
+For example, selecting USD as the source requests the USD rates and then reads the INR rate if INR is selected as the target.
 
-2. **Flag Synchronization (`updateFlag`):**
-   - Whenever a user selects a different currency, the `change` event triggers `updateFlag()`.
-   - The flag image URL updates to `https://flagsapi.com/{countryCode}/flat/64.png`.
+## Current Limitations
 
-3. **Fetching Exchange Rates & Calculating:**
-   - Clicking **"Get Exchange Rate"** sends an asynchronous `fetch()` request to:
-     ```text
-     https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/{source-currency}.json
-     ```
-   - The app extracts the target currency rate from the returned JSON payload:
-     $$\text{Final Amount} = \text{Amount} \times \text{Rate}$$
-   - The converted result is rounded to two decimal places and rendered in the `.msg` container.
+- **Network required:** exchange rates and flag images are loaded from external services.
+- **No request error handling yet:** if the API is unavailable, the request fails, or a currency rate is missing, the app may not show a useful error message.
+- **Input validation is basic:** empty amounts and values below `1` are reset to `1`; this also prevents converting zero or negative amounts.
+- **Currency/region mapping is approximate:** `codes.js` maps each currency to a flag code, but some currencies are shared by multiple countries or use special regional codes. A currency code is not always a one-to-one match for a country.
+- **Initial result text is static:** the message in `index.html` (`1 USD = 91.61 INR`) is placeholder text and may not match the current exchange rate until a conversion is performed.
+- **No automated tests or build tooling are included** in the supplied project.
 
----
+## Possible Improvements
 
-## 💡 Recommended Enhancements
+- Add `try...catch` and check `response.ok` before parsing API responses.
+- Validate that the amount is a finite positive number and clearly explain invalid input.
+- Handle missing currency rates and network errors with user-friendly messages.
+- Update the result when either currency changes, or add a swap-currencies button.
+- Replace the static initial result with a neutral prompt or fetch a rate on page load.
+- Add accessibility improvements, including descriptive labels for inputs and flag images.
+- Add tests for conversion calculations, input validation, and API failure scenarios.
 
-If you're looking to extend or improve this project, here are the most impactful upgrades:
+## API and Attribution
 
-- [ ] **Interactive Swap Button:** Enable clicking the `<i class="fa-solid fa-arrow-right-arrow-left"></i>` icon to swap the "From" and "To" currencies and instantly update both flags.
-- [ ] **Error Handling & Loading States:**
-  - Wrap API requests in `try...catch` and inspect `response.ok`.
-  - Display user-friendly notices for network errors or offline states.
-  - Show a loading spinner or disable the button while fetching.
-- [ ] **Auto-Fetch on Initial Page Load:**
-  - Replace the static placeholder (`1 USD = 91.61 INR`) by triggering an initial conversion when the page loads.
-- [ ] **Support Fractional & Decimal Amounts:**
-  - Update validation to allow positive decimals (e.g., `0.50` or `10.75`) rather than resetting amounts below `1` to `1`.
-- [ ] **Live Real-Time Conversion:**
-  - Automatically recalculate the rate when changing currency selections or typing in the amount box (with debounce).
-- [ ] **Accessibility (a11y) & Mobile Optimization:**
-  - Add descriptive `alt` tags to flag images and `<label>` elements for inputs.
-  - Adjust `.container` width with responsive CSS units (`clamp()` or `min(90vw, 380px)`) for better mobile display.
+- Exchange-rate data: [`@fawazahmed0/currency-api`](https://github.com/fawazahmed0/currency-api)
+- Flag images: [FlagsAPI](https://flagsapi.com/)
+- Icons: [Font Awesome](https://fontawesome.com/)
 
----
+These external services have their own availability, terms, and data-update behavior. Exchange rates can differ from the rates offered by banks, card networks, or money-transfer services, and should not be treated as guaranteed transaction quotes.
 
-## ⚖️ API & Attribution
+## License
 
-- **Exchange Rate API:** Powered by [@fawazahmed0/currency-api](https://github.com/fawazahmed0/currency-api).
-- **Flag Icons:** Provided by [FlagsAPI](https://flagsapi.com/).
-- **Vector Icons:** Provided by [Font Awesome](https://fontawesome.com/).
-
-> **Disclaimer:** Exchange rates provided by public APIs are indicative and intended for informational purposes only. Do not rely on them for mission-critical financial transactions.
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE) — you are free to use, modify, and distribute this software for personal and commercial projects.
+No license file was included with the supplied project. Add a `LICENSE` file before presenting the repository as open source, and choose a license that matches how you want others to use the code.
