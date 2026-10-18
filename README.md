@@ -67,20 +67,6 @@ The project focuses on the fundamentals of web development: **DOM manipulation, 
   </tr>
 </table>
 
-## 🖥️ Preview
-
-> Add a screenshot or GIF of the running application here to make the repository easier to understand at a glance.
->
-> Suggested file: `assets/currency-converter-preview.png`
-
-Once you add the screenshot, replace this note with:
-
-```html
-<p align="center">
-  <img src="assets/currency-converter-preview.png" alt="Currency Converter application preview" width="700">
-</p>
-```
-
 ## 🧰 Built With
 
 | Technology / Service | Role in the project |
